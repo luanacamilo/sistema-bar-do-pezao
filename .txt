@@ -1,0 +1,17 @@
+PEDIR PRA ENVIAREM:
+
+
+-  fotos das porcoes/produtos
+
+- cnpj 
+
+- email /  contato comercial
+
+
+
+LEMBRAR:
+
+
+- tirar id_mesa no banco
+
+- hospedar meu portfolio 

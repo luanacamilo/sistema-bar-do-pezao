@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="Bar do Pezao">
+  <circle cx="110" cy="110" r="106" fill="#b9141a" stroke="#e9aa18" stroke-width="3"/>
+  <text x="110" y="83" text-anchor="middle" fill="#ffc338" font-family="Arial,sans-serif" font-size="29" font-weight="800">BAR DO</text>
+  <text x="110" y="136" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="52" font-weight="900" letter-spacing="-3">PEZAO</text>
+  <path d="M155 64c23 0 34 11 34 24 0 12-12 19-23 19-5 0-10-2-14-4 2 10 13 15 23 20 11 5 15 14 9 23-6 8-18 9-27 5-9-5-14-14-13-25 2 12 10 18 18 18 6 0 9-3 9-7 0-5-7-9-15-12-15-7-23-17-19-27 4-11 13-17 18-20z" fill="#ffc338"/>
+  <circle cx="180" cy="54" r="7" fill="#ffc338"/><circle cx="165" cy="52" r="5" fill="#ffc338"/><circle cx="153" cy="58" r="4" fill="#ffc338"/>
+</svg>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Bell,
   Beer,
@@ -8,22 +8,18 @@ import {
   LogOut,
   MapPin,
   MessageCircle,
-  Minus,
   Phone,
-  Plus,
   QrCode,
-  Receipt,
   ShieldCheck,
   ShoppingBag,
   Sparkles,
   Star,
   Utensils,
   Volume2,
-  X,
 } from 'lucide-react'
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { supabase } from './lib/supabaseClient'
-import { menuSections } from './menuData'
+import MenuCatalog from './MenuCatalog'
 
 function InstagramIcon({ size = 19 }) {
   return (
@@ -196,7 +192,6 @@ function LandingPage() {
           <p>Cerveja gelada, porcao na mesa e historia no balcao.</p>
           <div className="hero-cta">
             <Link className="home-primary" to="/cardapio"><Utensils size={18} /> Ver cardapio</Link>
-            <Link className="home-secondary" to="/cardapio"><MessageCircle size={18} /> Fazer pedido</Link>
           </div>
         </div>
       </section>
@@ -341,252 +336,8 @@ function Login() {
   )
 }
 
-function MenuItemRow({ item, onAdd }) {
-  return (
-    <article className="menu-item-row">
-      <div className="menu-item-info">
-        <h4>{item.name}</h4>
-        {item.description && <p>{item.description}</p>}
-      </div>
-      <div className="menu-item-actions">
-        <strong>{money(item.price)}</strong>
-        <button className="add" onClick={onAdd}>
-          <Plus size={16} />
-        </button>
-      </div>
-    </article>
-  )
-}
-
 function CustomerMenu() {
-  const [cart, setCart] = useState([])
-  const [notes, setNotes] = useState({})
-  const [sent, setSent] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [activeSection, setActiveSection] = useState(menuSections[0]?.id)
-  const sectionRefs = useRef({})
-  const navRef = useRef(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        const visible = entries.filter(entry => entry.isIntersecting)
-        if (visible.length) {
-          const top = visible.reduce((a, b) => (a.boundingClientRect.top < b.boundingClientRect.top ? a : b))
-          setActiveSection(top.target.dataset.sectionId)
-        }
-      },
-      { rootMargin: '-140px 0px -70% 0px', threshold: 0 },
-    )
-
-    Object.values(sectionRefs.current).forEach(node => node && observer.observe(node))
-    return () => observer.disconnect()
-  }, [])
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const count = cart.reduce((sum, item) => sum + item.quantity, 0)
-
-  function goToSection(id) {
-    sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
-  function add(item, sectionId, groupName) {
-    const id = [sectionId, groupName, item.name].filter(Boolean).join('::')
-    setCart(items => {
-      const found = items.find(entry => entry.id === id)
-      if (found) {
-        return items.map(entry => (entry.id === id ? { ...entry, quantity: entry.quantity + 1 } : entry))
-      }
-
-      return [...items, { id, name: item.name, price: item.price, quantity: 1 }]
-    })
-  }
-
-  function change(id, delta) {
-    setCart(items =>
-      items
-        .map(item => (item.id === id ? { ...item, quantity: item.quantity + delta } : item))
-        .filter(item => item.quantity > 0),
-    )
-  }
-
-  async function sendOrder() {
-    if (!cart.length) {
-      return
-    }
-
-    setBusy(true)
-
-    const payload = {
-      status: 'Pendente',
-      total,
-      items: cart.map(item => ({
-        product_id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        note: notes[item.id] || '',
-      })),
-    }
-
-    const { error } = await supabase.from('orders').insert(payload)
-    if (error) {
-      window.alert('Nao foi possivel enviar agora. Confira a conexao com o Supabase.')
-      setBusy(false)
-      return
-    }
-
-    setSent(true)
-    setCart([])
-    setNotes({})
-    setBusy(false)
-  }
-
-  async function quickCall(type) {
-    await supabase.from('service_calls').insert({ type, status: 'Pendente' })
-    window.alert(type === 'garcom' ? 'Garcom chamado!' : 'A conta foi solicitada!')
-  }
-
-  return (
-    <main className="customer">
-      <header className="customer-header">
-        <Link className="brand-home-link" to="/">
-          <Brand />
-        </Link>
-        <div className="table-tag">
-          <Utensils size={16} /> Cardapio
-        </div>
-      </header>
-
-      <section className="menu-hero">
-        <div>
-          <p className="eyebrow">Bem-vindo ao</p>
-          <h1>Bar do Pezao</h1>
-          <p>Escolha seus favoritos e faca o pedido direto da mesa.</p>
-        </div>
-      </section>
-
-      <div className="quick-actions">
-        <button onClick={() => quickCall('garcom')}>
-          <Bell size={17} /> Chamar garcom
-        </button>
-        <button onClick={() => quickCall('conta')}>
-          <Receipt size={17} /> Pedir a conta
-        </button>
-      </div>
-
-      <nav className="categories" ref={navRef}>
-        {menuSections.map(section => (
-          <button
-            className={activeSection === section.id ? 'active' : ''}
-            onClick={() => goToSection(section.id)}
-            key={section.id}
-          >
-            {section.title}
-          </button>
-        ))}
-      </nav>
-
-      <div className="menu-sections">
-        {menuSections.map(section => (
-          <section
-            className="menu-section"
-            id={`secao-${section.id}`}
-            data-section-id={section.id}
-            key={section.id}
-            ref={node => {
-              sectionRefs.current[section.id] = node
-            }}
-          >
-            <div className="menu-section-head" style={{ backgroundImage: `url(${section.image})` }}>
-              <h2>{section.title}</h2>
-            </div>
-
-            {section.items && (
-              <div className="menu-item-list">
-                {section.items.map(item => (
-                  <MenuItemRow item={item} onAdd={() => add(item, section.id)} key={item.name} />
-                ))}
-              </div>
-            )}
-
-            {section.groups &&
-              section.groups.map(group => (
-                <div className="menu-group" key={group.name}>
-                  <h3>{group.name}</h3>
-                  <div className="menu-item-list">
-                    {group.items.map(item => (
-                      <MenuItemRow item={item} onAdd={() => add(item, section.id, group.name)} key={item.name} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-          </section>
-        ))}
-      </div>
-
-      {cart.length > 0 && (
-        <aside className="cart-drawer">
-          <div className="cart-head">
-            <div>
-              <span className="eyebrow">Seu pedido</span>
-              <h2>
-                <ShoppingBag size={20} /> {count} itens
-              </h2>
-            </div>
-            <button className="icon-button" onClick={() => setCart([])}>
-              <X size={19} />
-            </button>
-          </div>
-
-          {cart.map(item => (
-            <div className="cart-item" key={item.id}>
-              <div>
-                <strong>{item.name}</strong>
-                <small>{money(item.price)} cada</small>
-                <input
-                  placeholder="Observacao (opcional)"
-                  value={notes[item.id] || ''}
-                  onChange={event => setNotes({ ...notes, [item.id]: event.target.value })}
-                />
-              </div>
-              <div className="stepper">
-                <button onClick={() => change(item.id, -1)}>
-                  <Minus size={14} />
-                </button>
-                <b>{item.quantity}</b>
-                <button onClick={() => change(item.id, 1)}>
-                  <Plus size={14} />
-                </button>
-              </div>
-            </div>
-          ))}
-
-          <div className="cart-total">
-            <span>Total</span>
-            <strong>{money(total)}</strong>
-          </div>
-
-          <button className="primary full" onClick={sendOrder} disabled={busy}>
-            {busy ? 'Enviando...' : 'Enviar pedido'} <ChevronRight size={18} />
-          </button>
-        </aside>
-      )}
-
-      {sent && (
-        <div className="success-toast">
-          <ChefHat size={23} />
-          <div>
-            <strong>Pedido enviado!</strong>
-            <span>A cozinha ja recebeu. Bom apetite!</span>
-          </div>
-          <button onClick={() => setSent(false)}>
-            <X size={16} />
-          </button>
-        </div>
-      )}
-    </main>
-  )
+  return <main className="customer catalog-page"><MenuCatalog /></main>
 }
 
 function KitchenPanel() {

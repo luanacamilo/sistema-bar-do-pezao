@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Beer, Check, ChevronDown, Flame, GlassWater, Search, UtensilsCrossed, Wine, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { menuSections } from './menuData'
+import { fetchMenu } from './lib/menuApi'
 import './menuCatalog.css'
 
 const definitions = [
@@ -15,42 +15,30 @@ const definitions = [
   ['cervejas', 'Cervejas', 'Sempre trincando', Beer],
   ['sem-alcool', 'Sem álcool', 'Refrescantes para todos', GlassWater],
 ]
-const drinkIds = ['drinks', 'whisky-licor', 'doses', 'cachaca-sabores', 'vinho-taca']
 const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
-const badges = { 'Bauru 2.0': 'Favorito', 'Iscas de Tilápia (450g)': 'Da casa', 'Batata Frita c/ Mussarela e Bacon (500g)': 'Mais pedida' }
-
-function present(item, section, group) {
-  let name = item.name.replaceAll(' c/ ', ' com ').replaceAll(' s/ ', ' sem ')
-  let description = item.description
-  const portion = name.match(/\s*\((\d+)\s*(g|un)\)$/)
-  if (portion && section.id !== 'frios') {
-    name = name.replace(portion[0], '')
-    const quantity = portion[2] === 'g' ? `${portion[1]} g` : `${portion[1]} unidades`
-    description = description ? `${description.replace(/\.$/, '')} — ${quantity}` : section.id === 'peixes' ? `Porção de ${quantity}.` : quantity
-  }
-  if (section.id === 'caipirinhas') {
-    const bases = { Pinga: 'Caipirinha', Vodka: 'Caipiroska', Vinho: 'Caipivinho', Rum: 'Caipirum', Gin: 'Caipigin', 'Steinhaeger Becosa': 'Caipiroska de Steinhaeger' }
-    const flavors = item.name.startsWith('Abacaxi')
-    name = flavors ? `${bases[group]} sabores` : item.name.replace(' Limão', ' de limão')
-    if (flavors) description = 'Abacaxi, hortelã, maracujá ou morango'
-    else if (group === 'Pinga') description = 'Cachaça'
-    else if (group === 'Vodka') description = 'Vodka'
-  }
-  if (section.id.startsWith('cervejas-') || section.id === 'long-neck') {
-    description = section.title.replace('Cervejas ', '').replace('ml', ' ml')
-  }
-  return { ...item, name, description, sectionId: section.id, group, badge: badges[item.name] }
-}
-
-const sections = definitions.map(([id, title, subtitle, Icon]) => {
-  const sources = menuSections.filter(section => id === 'drinks' ? drinkIds.includes(section.id) : id === 'cervejas' ? section.id.startsWith('cervejas-') || section.id === 'long-neck' : section.id === id)
-  const items = sources.flatMap(section => section.groups
-    ? section.groups.flatMap(group => group.items.map(item => present(item, section, group.name)))
-    : section.items.map(item => present(item, section)))
-  return { id, title, subtitle, Icon, items }
-})
 
 export default function MenuCatalog() {
+  const [sections, setSections] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
+  const [retry, setRetry] = useState(0)
+  useEffect(() => {
+    let active = true
+    setLoading(true); setLoadError(false)
+    fetchMenu().then(data => {
+      if (!active) return
+      setSections(data.sections.map(section => ({
+        id: section.slug, title: section.nome, subtitle: section.descricao,
+        Icon: definitions.find(definition => definition[0] === section.slug)?.[3] || UtensilsCrossed,
+        items: data.products.filter(product => product.id_secao === section.id).map(product => ({
+          id: product.id, name: product.nome, description: product.descricao,
+          price: Number(product.preco), badge: product.destaque,
+        })),
+      })))
+    }).catch(() => { if (active) setLoadError(true) })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [retry])
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('todos')
   const [collapsedSections, setCollapsedSections] = useState({})
@@ -149,12 +137,14 @@ export default function MenuCatalog() {
             </button>
           </h2>
         </div>
-        <div className="catalog-items" id={`catalog-items-${id}`} hidden={Boolean(collapsedSections[id])}>{items.map((item, index) => <article className="catalog-item" key={`${item.sectionId}-${item.group}-${index}`}>
+        <div className="catalog-items" id={`catalog-items-${id}`} hidden={Boolean(collapsedSections[id])}>{items.map(item => <article className="catalog-item" key={item.id}>
           <div className="catalog-item-copy"><div className="catalog-item-title"><h3>{item.name}</h3>{item.badge && <span className="catalog-badge">{item.badge}</span>}</div>{item.description && <p>{item.description}</p>}</div>
           <strong className="catalog-price"><small>R$</small>{item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
         </article>)}</div>
       </section>)}
-      {!visible.length && <div className="catalog-empty"><Search size={30} /><h2>Nenhum item encontrado</h2><p>Tente outro nome ou veja o cardápio completo.</p><button onClick={() => { setQuery(''); setCategory('todos') }}>Ver todo o cardápio</button></div>}
+      {loading && <p role="status">Carregando cardápio...</p>}
+      {loadError && <div className="catalog-empty" role="alert"><p>Não foi possível carregar o cardápio.</p><button onClick={() => setRetry(value => value + 1)}>Tentar novamente</button></div>}
+      {!loading && !loadError && !visible.length && <div className="catalog-empty"><Search size={30} /><h2>Nenhum item encontrado</h2><p>Tente outro nome ou veja o cardápio completo.</p><button onClick={() => { setQuery(''); setCategory('todos') }}>Ver todo o cardápio</button></div>}
     </div>
   </div>
 }

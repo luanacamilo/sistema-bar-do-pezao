@@ -1,0 +1,21 @@
+.menu-admin { min-height: 100vh; padding: 28px 20px; background: #0b0402; color: #f5eddf; }
+.admin-content { max-width: 1000px; margin: auto; }
+.admin-login { max-width: 420px; margin: 40px auto; }
+.menu-admin header, .admin-product { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.menu-admin a { color: #ffbb00; }
+.menu-admin button { min-height: 44px; padding: 10px 16px; border: 1px solid #65402d; border-radius: 6px; background: #39100b; color: #f5eddf; }
+.menu-admin button:disabled { opacity: .5; cursor: wait; }
+.menu-admin :focus-visible { outline: 2px solid #ffbb00; outline-offset: 3px; }
+.menu-admin form, .menu-admin fieldset { display: grid; gap: 18px; }
+.menu-admin fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.menu-admin label { display: grid; gap: 7px; }
+.menu-admin input, .menu-admin textarea, .menu-admin select { width: 100%; min-height: 44px; padding: 10px; border: 1px solid #65402d; border-radius: 6px; background: #1c0a05; color: #f5eddf; font: inherit; font-size: 16px; color-scheme: dark; }
+.menu-admin textarea { min-height: 90px; resize: vertical; }
+.menu-admin .admin-checkbox { display: flex; align-items: center; }
+.menu-admin input[type=checkbox] { width: 22px; min-height: 22px; accent-color: #ed1420; }
+.menu-admin .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-block: 16px; }
+.admin-section, .admin-editor { margin-top: 28px; padding: 20px; border: 1px solid #503023; border-radius: 10px; }
+.admin-product { padding-block: 12px; border-top: 1px solid #503023; }
+.menu-admin [role=alert] { padding: 14px; background: #491411; color: #ffe0d0; }
+.menu-admin [role=status] { color: #ffbb00; }
+.admin-login form { margin-block: 24px; }

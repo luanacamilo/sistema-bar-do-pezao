@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Bell,
   Beer,
   ChefHat,
   ChevronRight,
   Clock3,
-  Globe,
   LogOut,
   MapPin,
   MessageCircle,
@@ -24,6 +23,26 @@ import {
 } from 'lucide-react'
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { supabase } from './lib/supabaseClient'
+import { menuSections } from './menuData'
+
+function InstagramIcon({ size = 19 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  )
+}
 
 const demoProducts = [
   {
@@ -163,7 +182,7 @@ function LandingPage() {
             <a href="#localizacao">Localizacao</a>
           </nav>
           <div className="header-actions">
-            <a className="social-button" href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><Globe size={19} /></a>
+            <a className="social-button" href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon size={19} /></a>
             <a className="whatsapp-button" href="https://wa.me/5519992351141" target="_blank" rel="noreferrer"><MessageCircle size={18} /> WhatsApp</a>
           </div>
         </div>
@@ -231,7 +250,7 @@ function LandingPage() {
           <div className="footer-brand">
             <Brand />
             <p>O melhor ponto de encontro de Americana. Cerveja gelada, porcao na mesa e historia no balcao.</p>
-            <div className="footer-social"><a href="https://wa.me/5519992351141" target="_blank" rel="noreferrer"><MessageCircle size={19} /></a><a href="https://instagram.com" target="_blank" rel="noreferrer"><Globe size={19} /></a></div>
+            <div className="footer-social"><a href="https://wa.me/5519992351141" target="_blank" rel="noreferrer"><MessageCircle size={19} /></a><a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon size={19} /></a></div>
           </div>
           <div className="footer-nav">
             <h3>NAVEGAÇÃO</h3>
@@ -322,38 +341,64 @@ function Login() {
   )
 }
 
+function MenuItemRow({ item, onAdd }) {
+  return (
+    <article className="menu-item-row">
+      <div className="menu-item-info">
+        <h4>{item.name}</h4>
+        {item.description && <p>{item.description}</p>}
+      </div>
+      <div className="menu-item-actions">
+        <strong>{money(item.price)}</strong>
+        <button className="add" onClick={onAdd}>
+          <Plus size={16} />
+        </button>
+      </div>
+    </article>
+  )
+}
+
 function CustomerMenu() {
-  const [products, setProducts] = useState(demoProducts)
-  const [category, setCategory] = useState('Todos')
   const [cart, setCart] = useState([])
   const [notes, setNotes] = useState({})
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [activeSection, setActiveSection] = useState(menuSections[0]?.id)
+  const sectionRefs = useRef({})
+  const navRef = useRef(null)
 
   useEffect(() => {
-    supabase
-      .from('products')
-      .select('*')
-      .eq('available', true)
-      .then(({ data }) => {
-        if (data?.length) {
-          setProducts(data)
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries.filter(entry => entry.isIntersecting)
+        if (visible.length) {
+          const top = visible.reduce((a, b) => (a.boundingClientRect.top < b.boundingClientRect.top ? a : b))
+          setActiveSection(top.target.dataset.sectionId)
         }
-      })
+      },
+      { rootMargin: '-140px 0px -70% 0px', threshold: 0 },
+    )
+
+    Object.values(sectionRefs.current).forEach(node => node && observer.observe(node))
+    return () => observer.disconnect()
   }, [])
 
-  const visibleProducts = products.filter(product => category === 'Todos' || product.category === category)
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const count = cart.reduce((sum, item) => sum + item.quantity, 0)
 
-  function add(product) {
+  function goToSection(id) {
+    sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  function add(item, sectionId, groupName) {
+    const id = [sectionId, groupName, item.name].filter(Boolean).join('::')
     setCart(items => {
-      const found = items.find(item => item.id === product.id)
+      const found = items.find(entry => entry.id === id)
       if (found) {
-        return items.map(item => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item))
+        return items.map(entry => (entry.id === id ? { ...entry, quantity: entry.quantity + 1 } : entry))
       }
 
-      return [...items, { ...product, quantity: 1 }]
+      return [...items, { id, name: item.name, price: item.price, quantity: 1 }]
     })
   }
 
@@ -419,9 +464,6 @@ function CustomerMenu() {
           <h1>Bar do Pezao</h1>
           <p>Escolha seus favoritos e faca o pedido direto da mesa.</p>
         </div>
-        <div className="hero-mark">
-          BP<span>.</span>
-        </div>
       </section>
 
       <div className="quick-actions">
@@ -433,32 +475,55 @@ function CustomerMenu() {
         </button>
       </div>
 
-      <nav className="categories">
-        {categories.map(item => (
-          <button className={category === item ? 'active' : ''} onClick={() => setCategory(item)} key={item}>
-            {item}
+      <nav className="categories" ref={navRef}>
+        {menuSections.map(section => (
+          <button
+            className={activeSection === section.id ? 'active' : ''}
+            onClick={() => goToSection(section.id)}
+            key={section.id}
+          >
+            {section.title}
           </button>
         ))}
       </nav>
 
-      <section className="product-grid">
-        {visibleProducts.map(product => (
-          <article className="product-card" key={product.id}>
-            <img src={product.image} alt={product.name} />
-            <div className="product-body">
-              <span className="product-category">{product.category}</span>
-              <h2>{product.name}</h2>
-              <p>{product.description}</p>
-              <footer>
-                <strong>{money(product.price)}</strong>
-                <button className="add" onClick={() => add(product)}>
-                  <Plus size={18} /> Adicionar
-                </button>
-              </footer>
+      <div className="menu-sections">
+        {menuSections.map(section => (
+          <section
+            className="menu-section"
+            id={`secao-${section.id}`}
+            data-section-id={section.id}
+            key={section.id}
+            ref={node => {
+              sectionRefs.current[section.id] = node
+            }}
+          >
+            <div className="menu-section-head" style={{ backgroundImage: `url(${section.image})` }}>
+              <h2>{section.title}</h2>
             </div>
-          </article>
+
+            {section.items && (
+              <div className="menu-item-list">
+                {section.items.map(item => (
+                  <MenuItemRow item={item} onAdd={() => add(item, section.id)} key={item.name} />
+                ))}
+              </div>
+            )}
+
+            {section.groups &&
+              section.groups.map(group => (
+                <div className="menu-group" key={group.name}>
+                  <h3>{group.name}</h3>
+                  <div className="menu-item-list">
+                    {group.items.map(item => (
+                      <MenuItemRow item={item} onAdd={() => add(item, section.id, group.name)} key={item.name} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+          </section>
         ))}
-      </section>
+      </div>
 
       {cart.length > 0 && (
         <aside className="cart-drawer">

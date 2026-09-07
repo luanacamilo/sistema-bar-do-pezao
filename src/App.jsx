@@ -46,9 +46,9 @@ function Brand() {
 
 function LandingPage() {
   const highlights = [
-    { name: 'Batata Frita com Cheddar e Bacon', text: 'Batatas crocantes cobertas com cheddar derretido e bacon crocante.', price: 'R$ 42', image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=1000&q=85' },
-    { name: 'Calabresa Acebolada', text: 'Calabresa fatiada na chapa com cebola dourada, limão e pão francês.', price: 'R$ 48', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1000&q=85' },
-    { name: 'Camarão ao Alho e Óleo', text: 'Camarões suculentos salteados no alho e óleo com ervas frescas.', price: 'R$ 65', image: 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=1000&q=85' },
+    { name: 'Polenta Recheada Costela com Provolone', text: 'Polenta frita crocante com provolone derretido e costela desfiada.', image: '/destaque-polenta.jpg' },
+    { name: 'Almofadinha de Tilápia', text: 'Massa de mandioca com recheio de tilápia desfiada e molho da casa.', image: '/destaque-almofadinha.jpg' },
+    { name: 'Camarão Empanado com Catupiry', text: 'Camarões empanados e crocantes, recheados com catupiry cremoso.', image: '/destaque-camarao.jpg' },
   ]
 
   return (
@@ -101,7 +101,7 @@ function LandingPage() {
 
       <section className="home-section favorites-section" id="destaques"><div className="home-container">
         <div className="section-heading"><p className="kicker">Os favoritos</p><h2>Porções e bebidas que não decepcionam</h2></div>
-        <div className="favorite-grid">{highlights.map(item => <article className="favorite-card" key={item.name}><div className="food-photo" style={{ backgroundImage: `url(${item.image})` }}><span>{item.price}</span></div><div><h3>{item.name}</h3><p>{item.text}</p></div></article>)}</div>
+        <div className="favorite-grid">{highlights.map(item => <article className="favorite-card" key={item.name}><div className="food-photo" style={{ backgroundImage: `url(${item.image})` }} /><div><h3>{item.name}</h3><p>{item.text}</p></div></article>)}</div>
       </div></section>
 
       <section className="home-container menu-callout" id="cardapio"><div><p className="kicker">Cardápio completo</p><h2>Quer ver tudo o que servimos?</h2><p>Acesse nosso cardápio digital com porções, bebidas, combos e preços. Tudo na palma da mão.</p></div><Link className="menu-open" to="/cardapio">Abrir cardápio <ChevronRight size={20} /></Link></section>

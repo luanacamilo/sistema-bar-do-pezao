@@ -1110,7 +1110,6 @@ button {
 .favorite-card { overflow: hidden; border-radius: 18px; background: #2a170e; }
 .food-photo { position: relative; height: 360px; background: center / cover no-repeat; }
 .food-photo::after { content: ''; position: absolute; inset: auto 0 0; height: 35%; background: linear-gradient(transparent, rgba(0,0,0,.22)); }
-.food-photo span { position: absolute; z-index: 1; top: 13px; right: 13px; padding: 7px 13px; border-radius: 999px; background: var(--bar-yellow); color: #160c00; font-size: 13px; font-weight: 800; }
 .favorite-card > div:last-child { padding: 19px 20px 22px; }
 .favorite-card h3 { margin: 0 0 8px; font-size: 24px; }
 .favorite-card p { min-height: 42px; margin: 0; color: var(--bar-muted); font-size: 14px; line-height: 1.5; }

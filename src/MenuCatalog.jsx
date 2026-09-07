@@ -32,7 +32,7 @@ export default function MenuCatalog() {
         Icon: definitions.find(definition => definition[0] === section.slug)?.[3] || UtensilsCrossed,
         items: data.products.filter(product => product.id_secao === section.id).map(product => ({
           id: product.id, name: product.nome, description: product.descricao,
-          price: Number(product.preco), badge: product.destaque,
+          price: Number(product.preco), badge: product.destaque, soldOut: product.ic_disponivel === false,
         })),
       })))
     }).catch(() => { if (active) setLoadError(true) })
@@ -137,9 +137,10 @@ export default function MenuCatalog() {
             </button>
           </h2>
         </div>
-        <div className="catalog-items" id={`catalog-items-${id}`} hidden={Boolean(collapsedSections[id])}>{items.map(item => <article className="catalog-item" key={item.id}>
+        <div className="catalog-items" id={`catalog-items-${id}`} hidden={Boolean(collapsedSections[id])}>{items.map(item => <article className={`catalog-item${item.soldOut ? ' is-sold-out' : ''}`} key={item.id}>
           <div className="catalog-item-copy"><div className="catalog-item-title"><h3>{item.name}</h3>{item.badge && <span className="catalog-badge">{item.badge}</span>}</div>{item.description && <p>{item.description}</p>}</div>
           <strong className="catalog-price"><small>R$</small>{item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+          {item.soldOut && <span className="catalog-sold-out-banner">Esgotado</span>}
         </article>)}</div>
       </section>)}
       {loading && <p role="status">Carregando cardápio...</p>}

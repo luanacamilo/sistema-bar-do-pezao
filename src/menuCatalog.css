@@ -43,6 +43,12 @@
 .catalog-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; padding-top: 16px; }
 .catalog-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; width: 100%; min-width: 0; min-height: 104px; padding: 28px 0 24px; border: 0; border-bottom: 1px solid #382016; border-radius: 0; background: transparent; color: inherit; text-align: left; }
 .catalog-item-copy { min-width: 0; }
+.catalog-item.is-sold-out { position: relative; flex-wrap: wrap; align-content: flex-start; column-gap: 14px; row-gap: 14px; }
+.catalog-item.is-sold-out .catalog-item-copy { flex: 1; }
+.catalog-item.is-sold-out .catalog-item-title h3 { color: #c8b5a6; }
+.catalog-item.is-sold-out .catalog-price { color: #c8b5a6; }
+.catalog-item.is-sold-out .catalog-badge { display: none; }
+.catalog-sold-out-banner { display: block; flex-basis: 100%; padding: 10px 14px; border: 1px solid #ff535b; border-radius: 6px; background: #a80e18; color: #fff5eb; text-align: center; font: 24px 'Anton', sans-serif; letter-spacing: 2px; text-transform: uppercase; }
 .catalog-item-title { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .catalog h3 { margin: 0; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
 .catalog-item p { margin: 4px 0 0; color: #d7b17c; font-size: 14px; line-height: 1.5; }

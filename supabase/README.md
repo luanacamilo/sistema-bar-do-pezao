@@ -21,10 +21,12 @@ A chave primária com CHECK permite somente uma conta autorizada. A tabela de au
 
 ## Permissões e validação
 
-- Visitante: lê seções e produtos disponíveis, sem modificar dados.
+Para a opção Esgotado, o campo utilizado é `produto.ic_disponivel`: true = disponível, false = esgotado. Execute `migrations/202609050004_disponibilidade_publica.sql` para permitir que os visitantes também leiam os produtos esgotados. As permissões de escrita continuam restritas ao administrador. Recarregue o cardápio público para ver a alteração. A migração 003 foi substituída por esta abordagem e não precisa ser executada; se já tiver sido aplicada, a coluna extra pode permanecer, pois o código não a utiliza.
+
+- Visitante: lê seções e produtos, inclusive esgotados, sem modificar dados.
 - Usuário autenticado sem autorização: mesmas leituras públicas, sem editar.
-- Administrador autorizado: lê inclusive produtos ocultos e cria/edita/exclui seções e produtos.
-- Ocultar produto: desmarcar Disponível no cardápio no editor.
+- Administrador autorizado: cria/edita/exclui seções e produtos e altera a disponibilidade.
+- Esgotar produto: desmarcar Disponível no editor ou usar o botão Marcar como esgotado. O produto permanece visível com aviso; não existe um estado separado de ocultação.
 - Uma seção com produtos deve ter os produtos movidos/excluídos antes da exclusão (FK RESTRICT no esquema novo; confira essa restrição no esquema preexistente).
 
 Após aplicar, valide em uma janela anônima e em sessões de administrador e de usuário não autorizado. Verifique bloqueio de INSERT/UPDATE/DELETE diretamente pela API, não apenas pelos botões. A chave publicável não executa migrações nem cria contas administradoras. Os scripts deste repositório não são aplicados automaticamente no projeto remoto.

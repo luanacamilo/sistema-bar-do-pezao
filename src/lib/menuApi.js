@@ -1,10 +1,9 @@
 import { supabase } from './supabaseClient'
 
-export async function fetchMenu({ admin = false } = {}) {
-  let products = supabase.from('produto').select('id,id_secao,nome,descricao,preco,ic_disponivel,destaque,ordem').order('ordem').order('id')
-  if (!admin) products = products.eq('ic_disponivel', true)
+export async function fetchMenu() {
   const [sectionsResult, productsResult] = await Promise.all([
-    supabase.from('secao').select('id,nome,slug,descricao,ordem').order('ordem').order('id'), products,
+    supabase.from('secao').select('id,nome,slug,descricao,ordem').order('ordem').order('id'),
+    supabase.from('produto').select('id,id_secao,nome,descricao,preco,ic_disponivel,destaque,ordem').order('ordem').order('id'),
   ])
   if (sectionsResult.error) throw sectionsResult.error
   if (productsResult.error) throw productsResult.error
@@ -32,5 +31,6 @@ async function remove(table, id) {
 }
 export const saveSection = (value, id) => write('secao', value, id)
 export const saveProduct = (value, id) => write('produto', value, id)
+export const setProductSoldOut = (id, soldOut) => write('produto', { ic_disponivel: !soldOut }, id)
 export const deleteSection = id => remove('secao', id)
 export const deleteProduct = id => remove('produto', id)

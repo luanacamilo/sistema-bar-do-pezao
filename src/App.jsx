@@ -34,10 +34,10 @@ function InstagramIcon({ size = 19 }) {
 
 function Brand() {
   return (
-    <div className="brand-lockup" aria-label="Bar do Pezao, desde 1986">
+    <div className="brand-lockup" aria-label="Bar do Pezão, desde 1986">
       <img className="brand-logo" src="/logo.svg" alt="" />
       <span>
-        <b>BAR DO <em>PEZAO</em></b>
+        <b>BAR DO <em>PEZÃO</em></b>
         <small>DESDE 1986</small>
       </span>
     </div>
@@ -47,8 +47,8 @@ function Brand() {
 function LandingPage() {
   const highlights = [
     { name: 'Batata Frita com Cheddar e Bacon', text: 'Batatas crocantes cobertas com cheddar derretido e bacon crocante.', price: 'R$ 42', image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=1000&q=85' },
-    { name: 'Calabresa Acebolada', text: 'Calabresa fatiada na chapa com cebola dourada, limao e pao frances.', price: 'R$ 48', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1000&q=85' },
-    { name: 'Camarao ao Alho e Oleo', text: 'Camaroes suculentos salteados no alho e oleo com ervas frescas.', price: 'R$ 65', image: 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=1000&q=85' },
+    { name: 'Calabresa Acebolada', text: 'Calabresa fatiada na chapa com cebola dourada, limão e pão francês.', price: 'R$ 48', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1000&q=85' },
+    { name: 'Camarão ao Alho e Óleo', text: 'Camarões suculentos salteados no alho e óleo com ervas frescas.', price: 'R$ 65', image: 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=1000&q=85' },
   ]
 
   return (
@@ -59,11 +59,11 @@ function LandingPage() {
           <nav className="site-nav">
             <a href="#sobre">Sobre</a>
             <a href="#destaques">Destaques</a>
-            <a href="#cardapio">Cardapio</a>
-            <a href="#localizacao">Localizacao</a>
+            <a href="#cardapio">Cardápio</a>
+            <a href="#localizacao">Localização</a>
           </nav>
           <div className="header-actions">
-            <a className="social-button" href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon size={19} /></a>
+            <a className="social-button" href="https://www.instagram.com/barpezaoam/" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon size={19} /></a>
             <a className="whatsapp-button" href="https://wa.me/5519992351141" target="_blank" rel="noreferrer"><MessageCircle size={18} /> WhatsApp</a>
           </div>
         </div>
@@ -72,11 +72,11 @@ function LandingPage() {
       <section className="bar-hero">
         <div className="hero-shade" />
         <div className="home-container hero-content">
-          <span className="heritage-tag"><Star size={16} fill="currentColor" /> Tradicao desde 1986</span>
-          <h1>BAR DO <strong>PEZAO</strong></h1>
-          <p>Cerveja gelada, porcao na mesa e historia no balcao.</p>
+          <span className="heritage-tag"><Star size={16} fill="currentColor" /> Tradição desde 1986</span>
+          <h1>BAR DO <strong>PEZÃO</strong></h1>
+          <p>Cerveja gelada, porção na mesa e história no balcão.</p>
           <div className="hero-cta">
-            <Link className="home-primary" to="/cardapio"><Utensils size={18} /> Ver cardapio</Link>
+            <Link className="home-primary" to="/cardapio"><Utensils size={18} /> Ver cardápio</Link>
           </div>
         </div>
       </section>
@@ -84,39 +84,39 @@ function LandingPage() {
       <section className="home-section story-section" id="sobre">
         <div className="home-container story-layout">
           <article className="story-copy">
-            <p className="kicker">Nossa historia</p><h2>Mais que um bar, um ponto de encontro</h2>
-            <p><b>O Bar do Pezao</b> nasceu em 1986 com uma missao simples: servir comida boa, bebida gelada e fazer todo mundo se sentir em casa.</p>
-            <p>Aqui a mesa e farta, o papo e bom e a cerveja nao tem chance de esquentar.</p>
-            <p>Seja para aquele happy hour depois do trabalho, o almoco de domingo em familia ou a noite com os amigos, o Pezao e o lugar certo.</p>
-            <div className="story-stats"><span><b>38+</b> anos de historia</span><span><b>50+</b> itens no cardapio</span><span><b>∞</b> boas historias</span></div>
+            <p className="kicker">Nossa história</p><h2>Mais que um bar, um ponto de encontro</h2>
+            <p><b>O Bar do Pezão</b> nasceu em 1986 com uma missão simples: servir comida boa, bebida gelada e fazer todo mundo se sentir em casa.</p>
+            <p>Aqui a mesa é farta, o papo é bom e a cerveja não tem chance de esquentar.</p>
+            <p>Seja para aquele happy hour depois do trabalho, o almoço de domingo em família ou a noite com os amigos, o Pezão é o lugar certo.</p>
+            <div className="story-stats"><span><b>38+</b> anos de história</span><span><b>50+</b> itens no cardápio</span><span><b>∞</b> boas histórias</span></div>
           </article>
           <div className="feature-grid">
             <article><Beer /><h3>Cerveja Extra Gelada</h3><p>Chopp e cervejas sempre na temperatura ideal para o seu brinde.</p></article>
-            <article><ChefHat /><h3>Porcoes Generosas</h3><p>Tamanho de familia, feitas para dividir ou nao, a gente nao julga.</p></article>
-            <article><Utensils /><h3>Comida de Buteco</h3><p>O sabor autentico do boteco brasileiro com aquele toque caseiro.</p></article>
+            <article><ChefHat /><h3>Porções Generosas</h3><p>Tamanho de família, feitas para dividir ou não, a gente não julga.</p></article>
+            <article><Utensils /><h3>Comida de Buteco</h3><p>O sabor autêntico do boteco brasileiro com aquele toque caseiro.</p></article>
             <article><Clock3 /><h3>Ambiente Acolhedor</h3><p>Atendimento de gente grande e clima de encontro de amigos.</p></article>
           </div>
         </div>
       </section>
 
       <section className="home-section favorites-section" id="destaques"><div className="home-container">
-        <div className="section-heading"><p className="kicker">Os favoritos</p><h2>Porcoes e bebidas que nao decepcionam</h2></div>
+        <div className="section-heading"><p className="kicker">Os favoritos</p><h2>Porções e bebidas que não decepcionam</h2></div>
         <div className="favorite-grid">{highlights.map(item => <article className="favorite-card" key={item.name}><div className="food-photo" style={{ backgroundImage: `url(${item.image})` }}><span>{item.price}</span></div><div><h3>{item.name}</h3><p>{item.text}</p></div></article>)}</div>
       </div></section>
 
-      <section className="home-container menu-callout" id="cardapio"><div><p className="kicker">Cardapio completo</p><h2>Quer ver tudo o que servimos?</h2><p>Acesse nosso cardapio digital com porcoes, bebidas, combos e precos. Tudo na palma da mao.</p></div><Link className="menu-open" to="/cardapio">Abrir cardapio <ChevronRight size={20} /></Link></section>
+      <section className="home-container menu-callout" id="cardapio"><div><p className="kicker">Cardápio completo</p><h2>Quer ver tudo o que servimos?</h2><p>Acesse nosso cardápio digital com porções, bebidas, combos e preços. Tudo na palma da mão.</p></div><Link className="menu-open" to="/cardapio">Abrir cardápio <ChevronRight size={20} /></Link></section>
 
       <section className="home-section location-section" id="localizacao"><div className="home-container">
         <div className="section-heading"><p className="kicker">Onde estamos</p><h2>Venha nos visitar</h2></div>
         <div className="contact-grid">
-          <article><MapPin /><h3>Endereco</h3><p>Av. Paschoal Ardito, 301<br />Sao Manoel, Americana - SP<br />CEP 13472-130</p></article>
-          <article><Clock3 /><h3>Horario de funcionamento</h3><p>Quinta-feira <b>15:00-01:00</b><br />Sexta-feira <b>15:00-01:00</b><br />Sabado <b>15:00-01:00</b><br />Domingo <b>Fechado</b><br />Segunda-feira <b>15:00-00:30</b><br />Terca-feira <b>15:00-00:30</b><br />Quarta-feira <b>15:00-01:00</b></p></article>
+          <article><MapPin /><h3>Endereço</h3><p>Av. Paschoal Ardito, 301<br />São Manoel, Americana - SP<br />CEP 13472-130</p></article>
+          <article><Clock3 /><h3>Horário de funcionamento</h3><p>Domingo <b>Fechado</b><br />Segunda e Terça <b>15:00-00:30</b><br />Quarta a Sábado <b>15:00-01:00</b></p></article>
           <article><Phone /><h3>Contato</h3><p>(19) 99235-1141</p><a href="https://wa.me/5519992351141" target="_blank" rel="noreferrer">Falar no WhatsApp</a></article>
         </div>
         <div className="location-map-layout">
           <div className="map-frame">
             <iframe
-              title="Localizacao do Bar do Pezao no Google Maps"
+              title="Localização do Bar do Pezão no Google Maps"
               src="https://www.google.com/maps?q=Av.+Paschoal+Ardito%2C+301%2C+Sao+Manoel%2C+Americana+-+SP%2C+13472-130&output=embed"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -129,19 +129,19 @@ function LandingPage() {
         <div className="home-container footer-content-full">
           <div className="footer-brand">
             <Brand />
-            <p>O melhor ponto de encontro de Americana. Cerveja gelada, porcao na mesa e historia no balcao.</p>
-            <div className="footer-social"><a href="https://wa.me/5519992351141" target="_blank" rel="noreferrer"><MessageCircle size={19} /></a><a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon size={19} /></a></div>
+            <p>O melhor ponto de encontro de Americana. Cerveja gelada, porção na mesa e história no balcão.</p>
+            <div className="footer-social"><a href="https://wa.me/5519992351141" target="_blank" rel="noreferrer"><MessageCircle size={19} /></a><a href="https://www.instagram.com/barpezaoam/" target="_blank" rel="noreferrer" aria-label="Instagram"><InstagramIcon size={19} /></a></div>
           </div>
           <div className="footer-nav">
             <h3>NAVEGAÇÃO</h3>
             <a href="#sobre">Sobre</a>
             <a href="#destaques">Destaques</a>
-            <a href="#cardapio">Cardapio</a>
-            <a href="#localizacao">Localizacao</a>
+            <a href="#cardapio">Cardápio</a>
+            <a href="#localizacao">Localização</a>
           </div>
           <div className="footer-contact">
             <h3>FALE CONOSCO</h3>
-            <p><strong>Bar do Pezao</strong><br />Av. Paschoal Ardito, 301<br />Sao Manoel, Americana - SP<br />CEP 13472-130</p>
+            <p><strong>Bar do Pezão</strong><br />Av. Paschoal Ardito, 301<br />São Manoel, Americana - SP<br />CEP 13472-130</p>
             <p><a href="https://wa.me/5519992351141" target="_blank" rel="noreferrer">(19) 99235-1141</a></p>
           </div>
         </div>

@@ -6,7 +6,7 @@ export const menuSections = [
     items: [
       { name: 'Bauru 1.0', description: 'Carne, mussarela, tomate e alface. Acompanha batata frita e molho da casa.', price: 22.9 },
       { name: 'Bauru 2.0', description: 'Carne, mussarela, tomate, alface, cheddar e bacon. Acompanha batata frita e molho da casa.', price: 26.9 },
-      { name: 'Frango a Passarinho', description: '', price: 30 },
+      { name: 'Frango à Passarinho', description: '', price: 30 },
       { name: 'Calabresa Acebolada', description: 'Acompanha fatias de pão e molho da casa.', price: 33 },
     ],
   },
